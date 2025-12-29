@@ -1,0 +1,28 @@
+-- สคริปต์ Auto Farm สำหรับจอมทัพวัย 21
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local virtualUser = game:GetService("VirtualUser")
+
+-- 1. ฟังก์ชันสั่งให้ตัวละครกดโจมตี (เหมือนตอนวาดท่า Unarmed)
+spawn(function()
+    while wait() do
+        -- คำสั่งคลิกซ้ายอัตโนมัติ
+        virtualUser:CaptureController()
+        virtualUser:ClickButton1(Vector2.new(0,0))
+    end
+end)
+
+-- 2. ฟังก์ชันวาร์ปไปหามอนสเตอร์
+_G.AutoFarm = true -- เปิด/ปิดระบบฟาร์ม
+
+while _G.AutoFarm do
+    wait(0.1)
+    pcall(function()
+        for i, v in pairs(game.Workspace.Monsters:GetChildren()) do
+            if v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 then
+                -- สั่งให้ตัวละครลอยไปใกล้ๆ มอนสเตอร์ (วาร์ป)
+                character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0, 0, 5)
+            end
+        end
+    end)
+end
