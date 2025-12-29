@@ -1,0 +1,33 @@
+local tool = script.Parent
+local player = game.Players.LocalPlayer
+local mouse = player:GetMouse()
+
+tool.Activated:Connect(function()
+	print("Pop Cat Activated!")
+	-- This is where you would trigger an animation or sound
+	-- For a real game, you would use a RemoteEvent to deal damage on the server
+end)
+local npcHead = script.Parent
+local nameLabel = npcHead.BillboardGui.TextLabel
+
+-- Since you are the character namer, you can change this string:
+local characterName = "Floppa the Destroyer" 
+
+nameLabel.Text = characterName
+nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+nameLabel.TextStrokeTransparency = 0 -- Makes it easy to read
+game.Players.PlayerAdded:Connect(function(player)
+	local leaderstats = Instance.new("Folder")
+	leaderstats.Name = "leaderstats"
+	leaderstats.Parent = player
+
+	local money = Instance.new("IntValue")
+	money.Name = "Money"
+	money.Value = 0
+	money.Parent = leaderstats
+
+	local gems = Instance.new("IntValue")
+	gems.Name = "Gems"
+	gems.Value = 0
+	gems.Parent = leaderstats
+end)
