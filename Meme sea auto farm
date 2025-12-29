@@ -1,0 +1,25 @@
+-- Place this script inside a Model (the Helper)
+local helper = script.Parent
+local speed = 10
+
+function followAndCollect(player)
+    local character = player.Character
+    if not character then return end
+    
+    local rootPart = character:FindFirstChild("HumanoidRootPart")
+    
+    game:GetService("RunService").Heartbeat:Connect(function()
+        -- 1. Follow the Player
+        local targetPos = rootPart.Position + Vector3.new(3, 2, 0) -- Stays slightly behind
+        helper.CFrame = helper.CFrame:Lerp(CFrame.new(targetPos), 0.1)
+        
+        -- 2. Detect nearby "Money" items
+        for _, item in pairs(game.Workspace.Drops:GetChildren()) do
+            local distance = (item.Position - helper.Position).Magnitude
+            if distance < 10 then -- If item is close
+                item.Position = helper.Position -- Pull item to helper
+                -- Add logic here to give player Money then destroy item
+            end
+        end
+    end)
+end
