@@ -1,0 +1,37 @@
+-- นำสคริปต์นี้ไปใส่ใน Model (ตัวช่วยที่คุณตั้งชื่อไว้)
+local helper = script.Parent
+local speed = 10
+
+-- ฟังก์ชันติดตามและเก็บของ
+local function followAndCollect(player)
+    local character = player.Character
+    if not character then return end
+    
+    local rootPart = character:FindFirstChild("HumanoidRootPart")
+    
+    game:GetService("RunService").Heartbeat:Connect(function()
+        -- 1. การติดตามผู้เล่น (Follow)
+        local targetPos = rootPart.Position + Vector3.new(3, 2, 0)
+        helper.CFrame = helper.CFrame:Lerp(CFrame.new(targetPos), 0.1)
+        
+        -- 2. การตรวจสอบ ClassName และเก็บไอเทม (Auto Farm)
+        for _, item in pairs(game.Workspace.Drops:GetChildren()) do
+            -- ใช้ IsA เพื่อเช็ค ClassName ตามที่คุณแคปหน้าจอมาถาม
+            if item:IsA("BasePart") then 
+                local distance = (item.Position - helper.Position).Magnitude
+                if distance < 10 then 
+                    item.Position = helper.Position -- ดูดไอเทมเข้าหาตัวช่วย
+                    item:Destroy() -- ลบไอเทมเมื่อเก็บแล้ว
+                    print("เก็บไอเทมสำเร็จโดย " .. helper.Name) -- แสดงชื่อตัวละครที่คุณตั้ง
+                end
+            end
+        end
+    end)
+end
+
+-- รันสคริปต์เมื่อผู้เล่นเข้าเกม
+game.Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function()
+        followAndCollect(player)
+    end)
+end)
